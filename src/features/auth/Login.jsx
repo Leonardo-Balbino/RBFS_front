@@ -1,4 +1,4 @@
-// src/features/auth/Login.jsx
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -10,15 +10,13 @@ import {
   Alert,
   Link
 } from '@mui/material';
-import { Formik, Field } from 'formik';
+import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
+import { loginUser } from '../../services/login.service.js';
 
-// SENHA TEMPORÁRIA (Altere para a que desejar)
-const SENHA_FIXA = "admin123";
-
+// Validação para username e password
 const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('E-mail inválido')
+  username: Yup.string()
     .required('Campo obrigatório'),
   password: Yup.string()
     .min(6, 'Mínimo 6 caracteres')
@@ -29,16 +27,24 @@ const Login = () => {
   const navigate = useNavigate();
   const [error, setError] = useState('');
 
-  const handleSubmit = (values) => {
-    if(values.password === SENHA_FIXA) {
-      // Simula login bem sucedido
-      localStorage.setItem('loggedIn', 'true');
-      navigate('/');
-    } else {
-      setError('Senha incorreta! Use a senha temporária: admin123');
+  const handleSubmit = async (values) => {
+    console.log("Submetendo:", values);
+    try {
+      const responseData = await loginUser(values.username, values.password);
+      console.log("Resposta do login:", responseData);
+      if (responseData?.token) {
+        localStorage.setItem('token', responseData.token);
+        navigate('/');
+      } else {
+        setError('Credenciais inválidas. Tente novamente.');
+      }
+    } catch (error) {
+      console.error("Erro no login:", error);
+      setError('Não foi possível realizar o login. Verifique suas credenciais.');
     }
   };
-
+  
+  
   return (
     <Container maxWidth="xs">
       <Box sx={{ 
@@ -54,28 +60,24 @@ const Login = () => {
         </Typography>
 
         <Formik
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ username: '', password: '' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ handleSubmit, handleChange, errors, touched }) => (
-            <Box 
-              component="form" 
-              onSubmit={handleSubmit}
-              sx={{ width: '100%', mt: 1 }}
-            >
+          {({ handleChange, errors, touched }) => (
+            <Form style={{ width: '100%', marginTop: '16px' }}>
               {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
               <Field
                 as={TextField}
                 margin="normal"
                 fullWidth
-                label="E-mail"
-                name="email"
-                autoComplete="email"
+                label="Usuário"
+                name="username"
+                autoComplete="username"
                 onChange={handleChange}
-                error={touched.email && Boolean(errors.email)}
-                helperText={touched.email && errors.email}
+                error={touched.username && Boolean(errors.username)}
+                helperText={touched.username && errors.username}
               />
 
               <Field
@@ -101,13 +103,13 @@ const Login = () => {
               </Button>
 
               <Link 
-                href="#" 
+                href="#"
                 variant="body2"
                 onClick={() => alert('Funcionalidade não implementada')}
               >
                 Esqueceu a senha?
               </Link>
-            </Box>
+            </Form>
           )}
         </Formik>
       </Box>
