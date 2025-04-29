@@ -1,4 +1,4 @@
-// src/features/animal/ListaAnimais.jsx
+// src/pages/animal/ListaAnimais.jsx
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Container, Typography } from '@mui/material';

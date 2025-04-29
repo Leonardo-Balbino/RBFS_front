@@ -16,6 +16,8 @@ const NavBar = () => {
   const [anchorElAnimais, setAnchorElAnimais] = useState(null);
   const [anchorElAdocoes, setAnchorElAdocoes] = useState(null);
   const [anchorElCadastros, setAnchorElCadastros] = useState(null);
+  const [anchorElFinanceiro, setAnchorElFinanceiro] = useState(null); // Novo estado para Financeiro
+  const [anchorElEstoque, setAnchorElEstoque] = useState(null); // Novo estado para Estoque
 
   // Sincroniza com localStorage
   useEffect(() => {
@@ -25,13 +27,12 @@ const NavBar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('loggedIn');
-    setLoggedIn(false); // Agora está sendo usado corretamente
+    setLoggedIn(false);
     navigate('/login');
   };
 
   const handleMenuOpen = (setter) => (event) => setter(event.currentTarget);
   const handleMenuClose = (setter) => () => setter(null);
-
 
   return (
     <AppBar position="static">
@@ -119,6 +120,57 @@ const NavBar = () => {
             </MenuItem>
           </Menu>
 
+          {/* Menu Financeiro */}
+          <Button
+            color="inherit"
+            onClick={handleMenuOpen(setAnchorElFinanceiro)}
+            endIcon={<ArrowDropDownIcon />}
+          >
+            Financeiro
+          </Button>
+          <Menu
+            anchorEl={anchorElFinanceiro}
+            open={Boolean(anchorElFinanceiro)}
+            onClose={handleMenuClose(setAnchorElFinanceiro)}
+          >
+            <MenuItem component={Link} to="/financeiro" onClick={handleMenuClose(setAnchorElFinanceiro)}>
+              Listar Transações
+            </MenuItem>
+            <MenuItem component={Link} to="/financeiro/saldo" onClick={handleMenuClose(setAnchorElFinanceiro)}>
+              Ver Saldo
+            </MenuItem>
+            <MenuItem component={Link} to="/financeiro/criar" onClick={handleMenuClose(setAnchorElFinanceiro)}>
+              Nova Transação
+            </MenuItem>
+          </Menu>
+
+          {/* Menu Estoque */}
+          <Button
+            color="inherit"
+            onClick={handleMenuOpen(setAnchorElEstoque)}
+            endIcon={<ArrowDropDownIcon />}
+          >
+            Estoque
+          </Button>
+          <Menu
+            anchorEl={anchorElEstoque}
+            open={Boolean(anchorElEstoque)}
+            onClose={handleMenuClose(setAnchorElEstoque)}
+          >
+            <MenuItem component={Link} to="/estoque/entrada" onClick={handleMenuClose(setAnchorElEstoque)}>
+              Entrada de Materiais
+            </MenuItem>
+            <MenuItem component={Link} to="/estoque/saida" onClick={handleMenuClose(setAnchorElEstoque)}>
+              Saída de Materiais
+            </MenuItem>
+            <MenuItem component={Link} to="/estoque/listar" onClick={handleMenuClose(setAnchorElEstoque)}>
+              Listar Estoque
+            </MenuItem>
+            <MenuItem component={Link} to="/estoque/adicionar-item" onClick={handleMenuClose(setAnchorElEstoque)}>
+              Adicionar Novo Item
+            </MenuItem>
+          </Menu>
+
           {loggedIn ? (
             <Button 
               color="inherit"
@@ -135,9 +187,6 @@ const NavBar = () => {
               Login
             </Button>
           )}
-
-          
-        
         </div>
       </Toolbar>
     </AppBar>

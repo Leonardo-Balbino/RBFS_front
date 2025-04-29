@@ -1,25 +1,25 @@
-// src/features/adotante/CadastroAdotante.jsx
+// src/pages/clinica/CadastroClinica.jsx
 import React from 'react';
 import { Container, Typography, TextField, Button, Grid } from '@mui/material';
 
-const CadastroAdotante = () => {
+const CadastroClinica = () => {
   return (
     <Container maxWidth="md" style={{ height: '100vh' }}>
       <Typography variant="h4" gutterBottom>
-        Cadastro de Adotante
+        Cadastro de Clínica Veterinária
       </Typography>
       <form>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <TextField
-              label="Nome Completo"
+              label="Nome da Clínica"
               fullWidth
               required
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
-              label="CPF"
+              label="CNPJ"
               fullWidth
               required
             />
@@ -40,15 +40,14 @@ const CadastroAdotante = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
-              label="E-mail"
-              type="email"
+              label="Responsável Técnico"
               fullWidth
               required
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="Preferências de Adoção"
+              label="Serviços Oferecidos"
               multiline
               rows={3}
               fullWidth
@@ -65,4 +64,4 @@ const CadastroAdotante = () => {
   );
 };
 
-export default CadastroAdotante;
+export default CadastroClinica;

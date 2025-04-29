@@ -1,6 +1,6 @@
 // src/store/index.js
 import { configureStore } from '@reduxjs/toolkit';
-import animaisReducer from '../features/animais/animaisSlice';
+import animaisReducer from '../pages/animais/animaisSlice';
 
 const store = configureStore({
   reducer: {

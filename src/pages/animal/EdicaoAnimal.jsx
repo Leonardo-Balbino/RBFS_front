@@ -1,4 +1,4 @@
-// src/features/animal/EdicaoAnimal.jsx
+// src/pages/animal/EdicaoAnimal.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Typography, TextField, Button } from '@mui/material';

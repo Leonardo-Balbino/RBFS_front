@@ -1,4 +1,4 @@
-// src/features/animal/DetalhesAnimal.jsx
+// src/pages/animal/DetalhesAnimal.jsx
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Typography, Card, CardMedia, CardContent } from '@mui/material';

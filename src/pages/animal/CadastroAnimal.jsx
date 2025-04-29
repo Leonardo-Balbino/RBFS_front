@@ -1,55 +1,47 @@
-// src/features/clinica/CadastroClinica.jsx
+// src/pages/animal/CadastroAnimal.jsx
 import React from 'react';
 import { Container, Typography, TextField, Button, Grid } from '@mui/material';
 
-const CadastroClinica = () => {
+const CadastroAnimal = () => {
   return (
-    <Container maxWidth="md" style={{ height: '100vh' }}>
+    <Container maxWidth="md" style={{ height: '100%' }}>
       <Typography variant="h4" gutterBottom>
-        Cadastro de Clínica Veterinária
+        Cadastro de Animal
       </Typography>
       <form>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <TextField
-              label="Nome da Clínica"
+              label="Nome do Animal"
               fullWidth
               required
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
-              label="CNPJ"
+              label="Espécie"
               fullWidth
               required
+              select
+              SelectProps={{ native: true }}
+            >
+              <option value="">Selecione</option>
+              <option value="cachorro">Cachorro</option>
+              <option value="gato">Gato</option>
+            </TextField>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Idade"
+              type="number"
+              fullWidth
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="Endereço"
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Telefone"
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Responsável Técnico"
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Serviços Oferecidos"
+              label="Histórico de Saúde"
               multiline
-              rows={3}
+              rows={4}
               fullWidth
             />
           </Grid>
@@ -64,4 +56,4 @@ const CadastroClinica = () => {
   );
 };
 
-export default CadastroClinica;
+export default CadastroAnimal;

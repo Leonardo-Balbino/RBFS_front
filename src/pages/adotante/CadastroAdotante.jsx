@@ -1,47 +1,56 @@
-// src/features/animal/CadastroAnimal.jsx
+// src/pages/adotante/CadastroAdotante.jsx
 import React from 'react';
 import { Container, Typography, TextField, Button, Grid } from '@mui/material';
 
-const CadastroAnimal = () => {
+const CadastroAdotante = () => {
   return (
-    <Container maxWidth="md" style={{ height: '100%' }}>
+    <Container maxWidth="md" style={{ height: '100vh' }}>
       <Typography variant="h4" gutterBottom>
-        Cadastro de Animal
+        Cadastro de Adotante
       </Typography>
       <form>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <TextField
-              label="Nome do Animal"
+              label="Nome Completo"
               fullWidth
               required
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
-              label="Espécie"
+              label="CPF"
               fullWidth
               required
-              select
-              SelectProps={{ native: true }}
-            >
-              <option value="">Selecione</option>
-              <option value="cachorro">Cachorro</option>
-              <option value="gato">Gato</option>
-            </TextField>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              label="Idade"
-              type="number"
-              fullWidth
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
-              label="Histórico de Saúde"
+              label="Endereço"
+              fullWidth
+              required
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="Telefone"
+              fullWidth
+              required
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              label="E-mail"
+              type="email"
+              fullWidth
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Preferências de Adoção"
               multiline
-              rows={4}
+              rows={3}
               fullWidth
             />
           </Grid>
@@ -56,4 +65,4 @@ const CadastroAnimal = () => {
   );
 };
 
-export default CadastroAnimal;
+export default CadastroAdotante;
