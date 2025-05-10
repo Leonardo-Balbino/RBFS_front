@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../../services/login.service.js'
 import { 
   Container,
   Box,
@@ -12,7 +13,6 @@ import {
 } from '@mui/material';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
-import { loginUser } from '../../services/login.service.js';
 
 // Validação para username e password
 const validationSchema = Yup.object().shape({
@@ -30,7 +30,7 @@ const Login = () => {
   const handleSubmit = async (values) => {
     console.log("Submetendo:", values);
     try {
-      const responseData = await loginUser(values.username, values.password);
+      const responseData = await login(values.username, values.password);
       console.log("Resposta do login:", responseData);
       if (responseData?.token) {
         localStorage.setItem('token', responseData.token);
