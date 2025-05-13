@@ -15,7 +15,6 @@ const ForgotPassword = () => {
   const [error, setError] = useState('');
 
   const handleSubmit = async (values) => {
-    try {
       // Substitua a URL abaixo pela sua rota real de recuperação
       const response = await fetch('http://localhost:3000/api/recuperar-senha', {
         method: 'POST',
@@ -30,9 +29,6 @@ const ForgotPassword = () => {
         setError('Não foi possível enviar o e-mail de recuperação.');
         setMessage('');
       }
-    } catch (err) {
-      setError('Erro no servidor. Tente novamente mais tarde.');
-    }
   };
 
   return (
@@ -89,4 +85,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default EsqueciSenha;
+export default ForgotPassword;

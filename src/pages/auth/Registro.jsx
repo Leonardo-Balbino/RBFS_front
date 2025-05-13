@@ -21,6 +21,25 @@ const validationSchema = Yup.object().shape({
     .required('Confirme sua senha'),
 });
 
+// Função de registro separada
+const register = async (username, password) => {
+  const response = await fetch('https://sua-api.com/registro', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username, password }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.error('Erro da API:', errorData);
+    throw new Error('Erro ao registrar');
+  }
+
+  return await response.json();
+};
+
 const Registro = () => {
   const navigate = useNavigate();
   const [error, setError] = useState('');
@@ -29,18 +48,19 @@ const Registro = () => {
   const handleSubmit = async (values) => {
     try {
       console.log('Valores para registro:', values);
-      // Aqui você chamaria sua API de registro, ex:
-      // await register(values.username, values.password);
-
+      await register(values.username, values.password);
       setSucesso(true);
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
+      console.error('Erro ao registrar:', err);
       setError('Erro ao registrar. Tente novamente.');
     }
   };
 
   return (
     <Container maxWidth="xs">
+
+      <p>teste</p>
       <Box
         sx={{
           minHeight: '100vh',
@@ -98,7 +118,6 @@ const Registro = () => {
                 onChange={handleChange}
                 error={touched.confirmPassword && Boolean(errors.confirmPassword)}
                 helperText={touched.confirmPassword && errors.confirmPassword}
-              
               />
 
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
