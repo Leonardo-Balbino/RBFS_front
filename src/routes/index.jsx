@@ -11,6 +11,8 @@ import CadastroAdotante from '../pages/adotante/CadastroAdotante';
 import CadastroClinica from '../pages/clinica/CadastroClinica';
 import FormularioAdocao from '../pages/adotante/FormularioAdocao'
 import Login from '../pages/auth/Login'
+import Registro from '../pages/auth/Registro';
+import EsqueciSenha from '../pages/auth/EsqueciSenha';
 import EntradaEstoque from '../pages/estoque/EntradaEstoque';
 import SaidaEstoque from '../pages/estoque/SaidaEstoque';
 import ListarEstoque from '../pages/estoque/ListarEstoque';
@@ -38,6 +40,8 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/registro" element={<Registro />} />
+      <Route path="/esqueci-senha" element={<EsqueciSenha />} />
         <Route path="/animais" element={<ListaAnimais />} />
         <Route path="/animais/cadastro" element={<CadastroAnimal />} />
         <Route path="/animais/editar/:id" element={<EdicaoAnimal />} />
