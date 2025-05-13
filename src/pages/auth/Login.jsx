@@ -102,12 +102,11 @@ const Login = () => {
                 Entrar
               </Button>
 
-              <Link 
-                href="#"
-                variant="body2"
-                onClick={() => alert('Funcionalidade não implementada')}
-              >
+              <Link href="/forgot-password" variant="body2">
                 Esqueceu a senha?
+              </Link>
+              <Link href="/register" variant="body2">
+                Não tem uma conta? Cadastre-se
               </Link>
             </Form>
           )}
