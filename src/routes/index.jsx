@@ -9,8 +9,8 @@ import CadastroAnimal from '../pages/animal/CadastroAnimal';
 import EdicaoAnimal from '../pages/animal/EdicaoAnimal';
 import CadastroAdotante from '../pages/adotante/CadastroAdotante';
 import CadastroClinica from '../pages/clinica/CadastroClinica';
-import FormularioAdocao from '../pages/adotante/FormularioAdocao'
-import Login from '../pages/auth/Login'
+import FormularioAdocao from '../pages/adotante/FormularioAdocao';
+import Login from '../pages/auth/Login';
 import Registro from '../pages/auth/Registro';
 import EsqueciSenha from '../pages/auth/EsqueciSenha';
 import EntradaEstoque from '../pages/estoque/EntradaEstoque';
@@ -21,13 +21,15 @@ import ListarTransacoes from '../pages/financeiro/ListarTransacoes';
 import FinanceiroSaldo from '../pages/financeiro/FinanceiroSaldo';
 import CriarTransacao from '../pages/financeiro/CriarTransacao';
 import AtualizarTransacao from '../pages/financeiro/AtualizarTransacao';
+import RelatorioEstadoSaude from '../pages/animal/RelatorioEstadoSaude'; // ✅ Importa RelatorioEstadoSaude
+import RelatorioVacinacao from '../pages/animal/RelatorioVacinacao'; // ✅ Importa RelatorioVacinacao
 
 // Layout principal que contém NavBar e Footer
 const Layout = () => {
   return (
     <>
       <NavBar />
-       <Outlet/> {/* Aqui serão renderizadas as páginas */}
+      <Outlet /> {/* Aqui serão renderizadas as páginas */}
       <Footer />
     </>
   );
@@ -41,7 +43,7 @@ const AppRoutes = () => {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/registro" element={<Registro />} />
-      <Route path="/esqueci-senha" element={<EsqueciSenha />} />
+        <Route path="/esqueci-senha" element={<EsqueciSenha />} />
         <Route path="/animais" element={<ListaAnimais />} />
         <Route path="/animais/cadastro" element={<CadastroAnimal />} />
         <Route path="/animais/editar/:id" element={<EdicaoAnimal />} />
@@ -56,9 +58,12 @@ const AppRoutes = () => {
         <Route path="/financeiro/saldo" element={<FinanceiroSaldo />} />
         <Route path="/financeiro/criar" element={<CriarTransacao />} />
         <Route path="/financeiro/editar/:id" element={<AtualizarTransacao />} />
+        {/* ✅ Rotas para Relatórios */}
+        <Route path="/relatorios/saude" element={<RelatorioEstadoSaude />} />
+        <Route path="/relatorios/vacinacao" element={<RelatorioVacinacao />} />
       </Route>
     </Routes>
   );
-}; <Route path="/animais/cadastro" element={<CadastroAnimal />} />
+};
 
 export default AppRoutes;
