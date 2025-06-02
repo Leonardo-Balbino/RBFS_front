@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  Button, 
-  Menu, 
-  MenuItem 
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Menu,
+  MenuItem,
+  Box
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -13,16 +14,17 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 const NavBar = () => {
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(false);
-  const [anchorElAnimais, setAnchorElAnimais] = useState(null);
-  const [anchorElAdocoes, setAnchorElAdocoes] = useState(null);
-  const [anchorElCadastros, setAnchorElCadastros] = useState(null);
-  const [anchorElFinanceiro, setAnchorElFinanceiro] = useState(null); // Novo estado para Financeiro
-  const [anchorElEstoque, setAnchorElEstoque] = useState(null); // Novo estado para Estoque
+  const [menus, setMenus] = useState({
+    animais: null,
+    adocoes: null,
+    cadastros: null,
+    financeiro: null,
+    estoque: null,
+    relatorios: null // ✅ Adicionando o menu de relatórios
+  });
 
-  // Sincroniza com localStorage
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-    setLoggedIn(isLoggedIn);
+    setLoggedIn(localStorage.getItem('loggedIn') === 'true');
   }, []);
 
   const handleLogout = () => {
@@ -31,163 +33,141 @@ const NavBar = () => {
     navigate('/login');
   };
 
-  const handleMenuOpen = (setter) => (event) => setter(event.currentTarget);
-  const handleMenuClose = (setter) => () => setter(null);
+  const handleMenuOpen = (menu) => (event) => {
+    setMenus({ ...menus, [menu]: event.currentTarget });
+  };
+
+  const handleMenuClose = (menu) => () => {
+    setMenus({ ...menus, [menu]: null });
+  };
+
+  const renderMenu = (menuKey, options) => (
+    <Menu
+      anchorEl={menus[menuKey]}
+      open={Boolean(menus[menuKey])}
+      onClose={handleMenuClose(menuKey)}
+    >
+      {options.map(({ label, to }) => (
+        <MenuItem
+          key={label}
+          component={Link}
+          to={to}
+          onClick={handleMenuClose(menuKey)}
+        >
+          {label}
+        </MenuItem>
+      ))}
+    </Menu>
+  );
 
   return (
     <AppBar position="static">
-      <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="h6" component={Link} to="/" sx={{ textDecoration: 'none', color: 'inherit' }}>
           RBFS 🐱 🐶 🐴
         </Typography>
 
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          {/* Menu Principal */}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Button color="inherit" component={Link} to="/">Home</Button>
 
           {/* Menu Animais */}
-          <Button 
+          <Button
             color="inherit"
-            onClick={handleMenuOpen(setAnchorElAnimais)}
+            onClick={handleMenuOpen('animais')}
             endIcon={<ArrowDropDownIcon />}
           >
             Animais
           </Button>
-          <Menu
-            anchorEl={anchorElAnimais}
-            open={Boolean(anchorElAnimais)}
-            onClose={handleMenuClose(setAnchorElAnimais)}
-          >
-            <MenuItem component={Link} to="/animais" onClick={handleMenuClose(setAnchorElAnimais)}>
-              Lista de Animais
-            </MenuItem>
-            <MenuItem component={Link} to="/animais/cadastro" onClick={handleMenuClose(setAnchorElAnimais)}>
-              Cadastrar Animal
-            </MenuItem>
-          </Menu>
+          {renderMenu('animais', [
+            { label: 'Lista de Animais', to: '/animais' },
+            { label: 'Cadastrar Animal', to: '/animais/cadastro' }
+          ])}
 
           {/* Menu Adoções */}
-          <Button 
+          <Button
             color="inherit"
-            onClick={handleMenuOpen(setAnchorElAdocoes)}
+            onClick={handleMenuOpen('adocoes')}
             endIcon={<ArrowDropDownIcon />}
           >
             Adoções
           </Button>
-          <Menu
-            anchorEl={anchorElAdocoes}
-            open={Boolean(anchorElAdocoes)}
-            onClose={handleMenuClose(setAnchorElAdocoes)}
-          >
-            <MenuItem component={Link} to="/adotantes/cadastro" onClick={handleMenuClose(setAnchorElAdocoes)}>
-              Cadastrar Adotante
-            </MenuItem>
-            <MenuItem component={Link} to="/adotantes/novo/:idAnimal" onClick={handleMenuClose(setAnchorElAdocoes)}>
-              Nova Adoção
-            </MenuItem>
-          </Menu>
+          {renderMenu('adocoes', [
+            { label: 'Cadastrar Adotante', to: '/adotantes/cadastro' },
+            { label: 'Nova Adoção', to: '/adotantes/novo/1' }
+          ])}
 
-          {/* Menu Clínicas */}
-          <Button 
-            color="inherit"
-            component={Link} 
-            to="/clinicas/cadastro"
-          >
+          {/* Clínicas */}
+          <Button color="inherit" component={Link} to="/clinicas/cadastro">
             Clínicas
           </Button>
 
-          {/* Menu Cadastros */}
-          <Button 
+          {/* Cadastros */}
+          <Button
             color="inherit"
+            onClick={handleMenuOpen('cadastros')}
             endIcon={<ArrowDropDownIcon />}
-            onClick={handleMenuOpen(setAnchorElCadastros)}
           >
             Cadastros
           </Button>
-          <Menu
-            anchorEl={anchorElCadastros}
-            open={Boolean(anchorElCadastros)}
-            onClose={handleMenuClose(setAnchorElCadastros)}
-          >
-            <MenuItem component={Link} to="/animais/cadastro">
-              Novo Animal
-            </MenuItem>
-            <MenuItem component={Link} to="/adotantes/cadastro">
-              Novo Adotante
-            </MenuItem>
-            <MenuItem component={Link} to="/clinicas/cadastro">
-              Nova Clínica
-            </MenuItem>
-          </Menu>
+          {renderMenu('cadastros', [
+            { label: 'Novo Animal', to: '/animais/cadastro' },
+            { label: 'Novo Adotante', to: '/adotantes/cadastro' },
+            { label: 'Nova Clínica', to: '/clinicas/cadastro' }
+          ])}
 
-          {/* Menu Financeiro */}
+          {/* Financeiro */}
           <Button
             color="inherit"
-            onClick={handleMenuOpen(setAnchorElFinanceiro)}
+            onClick={handleMenuOpen('financeiro')}
             endIcon={<ArrowDropDownIcon />}
           >
             Financeiro
           </Button>
-          <Menu
-            anchorEl={anchorElFinanceiro}
-            open={Boolean(anchorElFinanceiro)}
-            onClose={handleMenuClose(setAnchorElFinanceiro)}
-          >
-            <MenuItem component={Link} to="/financeiro" onClick={handleMenuClose(setAnchorElFinanceiro)}>
-              Listar Transações
-            </MenuItem>
-            <MenuItem component={Link} to="/financeiro/saldo" onClick={handleMenuClose(setAnchorElFinanceiro)}>
-              Ver Saldo
-            </MenuItem>
-            <MenuItem component={Link} to="/financeiro/criar" onClick={handleMenuClose(setAnchorElFinanceiro)}>
-              Nova Transação
-            </MenuItem>
-          </Menu>
+          {renderMenu('financeiro', [
+            { label: 'Listar Transações', to: '/financeiro' },
+            { label: 'Ver Saldo', to: '/financeiro/saldo' },
+            { label: 'Nova Transação', to: '/financeiro/criar' }
+          ])}
 
-          {/* Menu Estoque */}
+          {/* Estoque */}
           <Button
             color="inherit"
-            onClick={handleMenuOpen(setAnchorElEstoque)}
+            onClick={handleMenuOpen('estoque')}
             endIcon={<ArrowDropDownIcon />}
           >
             Estoque
           </Button>
-          <Menu
-            anchorEl={anchorElEstoque}
-            open={Boolean(anchorElEstoque)}
-            onClose={handleMenuClose(setAnchorElEstoque)}
-          >
-            <MenuItem component={Link} to="/estoque/entrada" onClick={handleMenuClose(setAnchorElEstoque)}>
-              Entrada de Materiais
-            </MenuItem>
-            <MenuItem component={Link} to="/estoque/saida" onClick={handleMenuClose(setAnchorElEstoque)}>
-              Saída de Materiais
-            </MenuItem>
-            <MenuItem component={Link} to="/estoque/listar" onClick={handleMenuClose(setAnchorElEstoque)}>
-              Listar Estoque
-            </MenuItem>
-            <MenuItem component={Link} to="/estoque/adicionar-item" onClick={handleMenuClose(setAnchorElEstoque)}>
-              Adicionar Novo Item
-            </MenuItem>
-          </Menu>
+          {renderMenu('estoque', [
+            { label: 'Entrada de Materiais', to: '/estoque/entrada' },
+            { label: 'Saída de Materiais', to: '/estoque/saida' },
+            { label: 'Listar Estoque', to: '/estoque/listar' },
+            { label: 'Adicionar Novo Item', to: '/estoque/adicionar-item' }
+          ])}
 
+          {/* ✅ Relatórios */}
+          <Button
+            color="inherit"
+            onClick={handleMenuOpen('relatorios')}
+            endIcon={<ArrowDropDownIcon />}
+          >
+            Relatórios
+          </Button>
+          {renderMenu('relatorios', [
+            { label: 'Relatório de Saúde', to: '/relatorios/saude' },
+            { label: 'Relatório de Vacinação', to: '/relatorios/vacinacao' }
+          ])}
+
+          {/* Login/Logout */}
           {loggedIn ? (
-            <Button 
-              color="inherit"
-              onClick={handleLogout}
-            >
+            <Button color="inherit" onClick={handleLogout}>
               Sair
             </Button>
           ) : (
-            <Button 
-              color="inherit" 
-              component={Link} 
-              to="/login"
-            >
+            <Button color="inherit" component={Link} to="/login">
               Login
             </Button>
           )}
-        </div>
+        </Box>
       </Toolbar>
     </AppBar>
   );
