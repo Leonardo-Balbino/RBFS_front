@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, Grid } from '@mui/material';
+import { Container, Typography, TextField, Button, Grid, Alert } from '@mui/material';
+import { criarTransacao } from '../../services/transacao.service.js';
 
 const CriarTransacao = () => {
   const [formData, setFormData] = useState({
@@ -7,17 +8,29 @@ const CriarTransacao = () => {
     valor: '',
     descricao: '',
   });
+  const [sucesso, setSucesso] = useState('');
+  const [erro, setErro] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Dados enviados:', formData);
-    // Simulação de envio
-    setFormData({ tipo: '', valor: '', descricao: '' });
+    setErro('');
+    setSucesso('');
+    try {
+      await criarTransacao({
+        tipo: formData.tipo,
+        valor: Number(formData.valor),
+        descricao: formData.descricao,
+      });
+      setSucesso('Transação cadastrada com sucesso!');
+      setFormData({ tipo: '', valor: '', descricao: '' });
+    } catch (err) {
+      setErro(err.message || 'Erro ao cadastrar transação');
+    }
   };
 
   return (
@@ -27,6 +40,16 @@ const CriarTransacao = () => {
       </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
+          {erro && (
+            <Grid item xs={12}>
+              <Alert severity="error">{erro}</Alert>
+            </Grid>
+          )}
+          {sucesso && (
+            <Grid item xs={12}>
+              <Alert severity="success">{sucesso}</Alert>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <TextField
               label="Tipo"
