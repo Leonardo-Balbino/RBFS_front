@@ -137,11 +137,12 @@ const NavBar = () => {
           >
             Estoque
           </Button>
-          {renderMenu('estoque', [
-            { label: 'Entrada de Materiais', to: '/estoque/entrada' },
-            { label: 'Saída de Materiais', to: '/estoque/saida' },
-            { label: 'Listar Estoque', to: '/estoque/listar' },
-            { label: 'Adicionar Novo Item', to: '/estoque/adicionar-item' }
+          {renderMenu('cadastros', [
+            { label: 'Novo Animal', to: '/animais/cadastro' },
+            { label: 'Novo Adotante', to: '/adotantes/cadastro' },
+            { label: 'Nova Clínica', to: '/clinicas/cadastro' },
+            { label: 'Saúde do Animal', to: '/animais/saude/cadastro' },      // <-- Adicione esta linha
+            { label: 'Vacina do Animal', to: '/animais/vacina/cadastro' }     // <-- Adicione esta linha
           ])}
 
           {/* ✅ Relatórios */}

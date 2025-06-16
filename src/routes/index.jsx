@@ -22,7 +22,9 @@ import FinanceiroSaldo from '../pages/financeiro/FinanceiroSaldo';
 import CriarTransacao from '../pages/financeiro/CriarTransacao';
 import AtualizarTransacao from '../pages/financeiro/AtualizarTransacao';
 import RelatorioEstadoSaude from '../pages/animal/RelatorioEstadoSaude'; // ✅ Importa RelatorioEstadoSaude
-import RelatorioVacinacao from '../pages/animal/RelatorioVacinacao'; // ✅ Importa RelatorioVacinacao
+import RelatorioVacinacao from '../pages/animal/RelatorioVacinacao'; 
+import CadastroSaudeAnimal from '../pages/animal/CadastroSaudeAnimal';
+import CadastroVacinaAnimal from '../pages/animal/CadastroVacinaAnimal';// ✅ Importa RelatorioVacinacao
 
 // Layout principal que contém NavBar e Footer
 const Layout = () => {
@@ -46,6 +48,7 @@ const AppRoutes = () => {
         <Route path="/esqueci-senha" element={<EsqueciSenha />} />
         <Route path="/animais" element={<ListaAnimais />} />
         <Route path="/animais/cadastro" element={<CadastroAnimal />} />
+        <Route path="/animais/cadastro/:id" element={<CadastroAnimal />} />
         <Route path="/animais/editar/:id" element={<EdicaoAnimal />} />
         <Route path="/adotantes/cadastro" element={<CadastroAdotante />} />
         <Route path="/adotantes/novo" element={<FormularioAdocao />} />
@@ -58,6 +61,8 @@ const AppRoutes = () => {
         <Route path="/financeiro/saldo" element={<FinanceiroSaldo />} />
         <Route path="/financeiro/criar" element={<CriarTransacao />} />
         <Route path="/financeiro/editar/:id" element={<AtualizarTransacao />} />
+        <Route path="/animais/saude/cadastro" element={<CadastroSaudeAnimal />} />
+        <Route path="/animais/vacina/cadastro" element={<CadastroVacinaAnimal />} />
         {/* ✅ Rotas para Relatórios */}
         <Route path="/relatorios/saude" element={<RelatorioEstadoSaude />} />
         <Route path="/relatorios/vacinacao" element={<RelatorioVacinacao />} />

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Container, Typography, TextField, Button, Grid, Alert } from '@mui/material';
-import { criarAnimal } from '../../services/animal.service.js';
+import { criarAnimal, atualizarAnimal, listarAnimais } from '../../services/animal.service.js';
 
 const CadastroAnimal = () => {
+  const { id } = useParams();
   const [form, setForm] = useState({
     nome: '',
     especie: '',
@@ -14,6 +16,17 @@ const CadastroAnimal = () => {
   const [sucesso, setSucesso] = useState('');
   const [erro, setErro] = useState('');
 
+  useEffect(() => {
+    if (id) {
+      // Busca o animal pelo id
+      listarAnimais().then(animais => {
+        const animal = animais.find(a => String(a.id) === String(id));
+        if (animal) setForm(animal);
+        else setErro('Animal não encontrado');
+      }).catch(() => setErro('Erro ao buscar animal'));
+    }
+  }, [id]);
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -23,32 +36,30 @@ const CadastroAnimal = () => {
     setErro('');
     setSucesso('');
     try {
-      await criarAnimal({
-        nome: form.nome,
-        especie: form.especie,
-        raca: form.raca,
-        idade: Number(form.idade),
-        status: form.status,
-        descricao: form.descricao
-      });
-      setSucesso('Animal cadastrado com sucesso!');
-      setForm({
-        nome: '',
-        especie: '',
-        raca: '',
-        idade: '',
-        status: 'disponível',
-        descricao: ''
-      });
+      if (id) {
+        await atualizarAnimal(id, form);
+        setSucesso('Animal atualizado com sucesso!');
+      } else {
+        await criarAnimal(form);
+        setSucesso('Animal cadastrado com sucesso!');
+        setForm({
+          nome: '',
+          especie: '',
+          raca: '',
+          idade: '',
+          status: 'disponível',
+          descricao: ''
+        });
+      }
     } catch (err) {
-      setErro(err.message || 'Erro ao cadastrar animal');
+      setErro(err.message || 'Erro ao salvar animal');
     }
   };
 
   return (
     <Container maxWidth="md" style={{ height: '100%' }}>
       <Typography variant="h4" gutterBottom>
-        Cadastro de Animal
+        {id ? 'Editar Animal' : 'Cadastro de Animal'}
       </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>

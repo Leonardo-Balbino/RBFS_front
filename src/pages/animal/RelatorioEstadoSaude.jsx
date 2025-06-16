@@ -8,13 +8,13 @@ import autoTable from 'jspdf-autotable';
 const RelatorioEstadoSaude = () => {
   const [nomeBusca, setNomeBusca] = useState('');
   const [animais, setAnimais] = useState([]);
-  const [saude, setSaude] = useState(null);
+  const [saudes, setSaudes] = useState([]); // agora é array
   const [erro, setErro] = useState('');
   const [loading, setLoading] = useState(false);
 
   const buscarAnimais = async () => {
     setErro('');
-    setSaude(null);
+    setSaudes([]);
     setAnimais([]);
     setLoading(true);
     try {
@@ -32,13 +32,13 @@ const RelatorioEstadoSaude = () => {
 
   const buscarSaude = async (animalId) => {
     setErro('');
-    setSaude(null);
+    setSaudes([]);
     setLoading(true);
     try {
       const relatorios = await listarRelatoriosSaude();
-      const relatorioAnimal = relatorios.find(r => r.animal_id === animalId);
-      if (relatorioAnimal) {
-        setSaude(relatorioAnimal);
+      const relatoriosAnimal = relatorios.filter(r => r.animal_id === animalId);
+      if (relatoriosAnimal.length > 0) {
+        setSaudes(relatoriosAnimal);
       } else {
         setErro('Nenhum relatório de saúde encontrado para este animal.');
       }
@@ -49,37 +49,39 @@ const RelatorioEstadoSaude = () => {
   };
 
   const exportarPDF = () => {
-  if (!saude) return;
-  const doc = new jsPDF();
-  doc.text('Relatório de Saúde do Animal', 14, 16);
-  autoTable(doc, {
-    startY: 24,
-    head: [['Campo', 'Valor']],
-    body: [
-      ['Animal', saude.animal_nome],
-      ['Condições Clínicas', saude.condicoes],
-      ['Observações', saude.observacoes || '-'],
-      ['Atualizado em', new Date(saude.updated_at).toLocaleString()],
-    ],
-  });
-  doc.save(`relatorio-saude-${saude.animal_nome}.pdf`);
-};
+    if (!saudes.length) return;
+    const doc = new jsPDF();
+    doc.text('Relatório de Saúde do Animal', 14, 16);
+    autoTable(doc, {
+      startY: 24,
+      head: [['Animal', 'Condições Clínicas', 'Observações', 'Atualizado em']],
+      body: saudes.map(s => [
+        s.animal_nome,
+        s.condicoes,
+        s.observacoes || '-',
+        s.updated_at ? new Date(s.updated_at).toLocaleString() : '-'
+      ]),
+    });
+    doc.save(`relatorio-saude-${saudes[0]?.animal_nome || 'animal'}.pdf`);
+  };
 
   const exportarCSV = () => {
-    if (!saude) return;
+    if (!saudes.length) return;
     const csvRows = [
-      ['Campo', 'Valor'],
-      ['Animal', saude.animal_nome],
-      ['Condições Clínicas', `"${saude.condicoes.replace(/"/g, '""')}"`],
-      ['Observações', `"${(saude.observacoes || '-').replace(/"/g, '""')}"`],
-      ['Atualizado em', new Date(saude.updated_at).toLocaleString()],
+      ['Animal', 'Condições Clínicas', 'Observações', 'Atualizado em'],
+      ...saudes.map(s => [
+        s.animal_nome,
+        `"${s.condicoes.replace(/"/g, '""')}"`,
+        `"${(s.observacoes || '-').replace(/"/g, '""')}"`,
+        s.updated_at ? new Date(s.updated_at).toLocaleString() : '-'
+      ])
     ];
     const csvContent = csvRows.map(e => e.join(',')).join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `relatorio-saude-${saude.animal_nome}.csv`);
+    link.setAttribute('download', `relatorio-saude-${saudes[0]?.animal_nome || 'animal'}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -114,15 +116,20 @@ const RelatorioEstadoSaude = () => {
           </ListItem>
         ))}
       </List>
-      {saude && (
+      {saudes.length > 0 && (
         <Box mt={3} p={2} border={1} borderRadius={2} borderColor="grey.300">
-          <Typography variant="h6" color="text.primary">Informações de Saúde</Typography>
-          <Typography color="text.primary"><b>Animal:</b> {saude.animal_nome}</Typography>
-          <Typography color="text.primary"><b>Condições Clínicas:</b> {saude.condicoes}</Typography>
-          <Typography color="text.primary"><b>Observações:</b> {saude.observacoes || '-'}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Atualizado em: {new Date(saude.updated_at).toLocaleString()}
-          </Typography>
+          <Typography variant="h6" color="text.primary">Registros de Saúde</Typography>
+          {saudes.map((s, idx) => (
+            <Box key={idx} mb={2}>
+              <Typography color="text.primary"><b>Animal:</b> {s.animal_nome}</Typography>
+              <Typography color="text.primary"><b>Condições Clínicas:</b> {s.condicoes}</Typography>
+              <Typography color="text.primary"><b>Observações:</b> {s.observacoes || '-'}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                Atualizado em: {s.updated_at ? new Date(s.updated_at).toLocaleString() : '-'}
+              </Typography>
+              <hr />
+            </Box>
+          ))}
           <Box mt={2} display="flex" gap={2}>
             <Button variant="contained" color="primary" onClick={exportarPDF}>
               Exportar PDF
